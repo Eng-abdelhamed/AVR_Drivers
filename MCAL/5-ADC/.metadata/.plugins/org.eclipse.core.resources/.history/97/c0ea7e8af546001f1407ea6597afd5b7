@@ -1,0 +1,77 @@
+/*******************************************************   ******************/
+/*****************************************************   ******************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : MCAL             *********************/
+/********************** SWC        : ADC              *********************/
+/********************** version    : 1.00             *********************/
+/****************************************************   *******************/
+/*****************************************************   ******************/
+#ifndef ADC_CONFIG_H
+#define ADC_CONFIG_H
+
+/**
+ *  OPTIONS:
+ *        1: AREF : Internal VREF turned off
+ *        2: AVCC: with external capacitor at AREF pin
+ *        3: Internal: 2.56V Voltage Reference with external capacitor at AREF pin
+ */
+#define VOLT_Refrence   AVCC
+
+/**
+ * choose ADC Voltage reference , whether given by AVCC,AREF,internal
+ *
+ *
+ */
+#define ADC_MAX_VOLT   5
+
+
+ /**
+  * options:
+  *  Resolution :
+  *      1 - 256 (8bit)
+  *      2 - 1024 (10bit)
+  */
+#define ADC_RESOLUTION 256
+
+/**
+ * prescalar selection options:
+ *      1 - DIV_BY_2
+ *      2 - DIV_BY_4
+ *      3 - DIV_BY_8
+ *      4 - DIV_BY_16
+ *      5 - DIV_BY_32
+ *      6 - DIV_BY_64
+ *      7 - DIV_BY_128
+ */
+#define ADC_PRESCALAR   DIV_BY_128
+
+/**
+ * conversion
+ * options:
+ * 1 - ENABLE
+ * 2 - DISABLE
+ */
+#define AUTO_TRIGGR DISABLE
+/**
+ * channel single ended from A0 -> A7
+ */
+#define AUTO_TRIG_CHANNEL 0
+
+#endif
+
+/**
+ * Auto trigger source options:
+ *  1 - FREE_RUNNING
+ *  2 - ANALOG_COMPARATOR
+ *  3 - External Interrupt Request 0
+ *  4 - Timer/Counter0 Compare Match
+ *  5 - Timer/Counter0 Overflow
+ *  6 - Timer/Counter1 Compare Match B
+ *  7 - Timer/Counter1 Overflow
+ *  8 - Timer/Counter1 Capture Event
+ */
+#define AUTO_TRIG_MODE  FREE_RUNNING
+
+
+
+#endif

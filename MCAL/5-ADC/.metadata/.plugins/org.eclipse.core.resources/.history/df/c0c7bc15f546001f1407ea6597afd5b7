@@ -1,0 +1,32 @@
+/*******************************************************   ******************/
+/*****************************************************   ******************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : MCAL             *********************/
+/********************** SWC        : ADC              *********************/
+/********************** version    : 1.00             *********************/
+/****************************************************   *******************/
+/*****************************************************   ******************/
+#ifndef ADC_PRIVATE_H
+#define ADC_PRIVATE_H
+
+#define DIV_BY_2   0
+#define DIV_BY_4   1
+#define DIV_BY_8   3
+#define DIV_BY_16  4
+#define DIV_BY_32  5
+#define DIV_BY_64  6
+#define DIV_BY_128 7
+
+#define ADMUX_MASK_CLEAR 0b11100000
+#define PRESCALAR_MASK   0b11111000
+
+ #define FREE_RUNNING                    0
+ #define ANALOG_COMPARATOR               1
+ #define ExternalInterruptRequest0       2
+ #define TimerCounter0CompareMatch       3
+ #define TimerCounter0Overflow           4
+ #define TimerCounter1CompareMatchB      5
+ #define Timercounter1Overflow           6
+ #define TimerCounter1CaptureEvent       7
+
+#endif

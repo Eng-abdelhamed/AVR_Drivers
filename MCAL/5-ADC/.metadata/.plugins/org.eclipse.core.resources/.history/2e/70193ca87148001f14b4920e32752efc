@@ -1,0 +1,123 @@
+/******************************************************* ******************/
+/***************************************************** ******************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : MCAL             *********************/
+/********************** SWC        : ADC              *********************/
+/********************** version    : 1.00             *********************/
+/**************************************************** *******************/
+/***************************************************** ******************/
+#include "STD_TYPES.h"
+#include "BIT_MATH.h"
+#include "ADC_interface.h"
+#include "ADC_private.h"
+#include "ADC_config.h"
+#include "ADC_register.h"
+
+void (*PV_ISRFUNC)(void) = 0;  // Function Pointer declaration to use in ISR
+
+void ADC_voidINIT(void)
+{
+    /**
+     * Set voltage reference
+     */
+#if (VOLT_Refrence == AVCC)
+    SET_BIT(ADMUX, ADMUX_REFS0);
+    CLR_BIT(ADMUX, ADMUX_REFS1);
+#elif (VOLT_Refrence == AREF)
+    CLR_BIT(ADMUX, ADMUX_REFS1);
+    CLR_BIT(ADMUX, ADMUX_REFS0);
+#elif (VOLT_Refrence == Internal)
+    SET_BIT(ADMUX, ADMUX_REFS0);
+    SET_BIT(ADMUX, ADMUX_REFS1);
+#else
+    #error "Wrong Voltage Reference Configurations"
+#endif
+    /*************************/
+    /* Left adjust => 8 bits */
+#if (ADC_RESOLUTION == 256)
+    SET_BIT(ADMUX, ADMUX_ADLAR);
+    /* Right  adjust => 10 bits */
+#elif (ADC_RESOLUTION == 1024)
+    CLR_BIT(ADMUX, ADMUX_ADLAR);
+#else
+    #error "Wrong Resolution Adjustment"
+#endif
+    /*************************/
+    /**
+     * Set prescaler options
+     */
+    ADCSRA &= PRESCALAR_MASK;  // clear the last three bits
+    ADCSRA |= ADC_PRESCALAR;   // set the last three bits with the value
+    /**
+     * Enable ADC
+     */
+    SET_BIT(ADCSRA, ADCSRA_ADEN);  // adc enable bit
+    /*************************/
+#if (AUTO_TRIGGR == ENABLE && AUTO_TRIG_MODE == FREE_RUNNING)
+    ADMUX &= ADMUX_MASK_CLEAR;
+    ADMUX |= AUTO_TRIG_CHANNEL;
+    // set start first conversion
+    SET_BIT(ADCSRA, ADCSRA_ADSC);
+    // SET AUTO TRIGGER ENABLE BIT
+    SET_BIT(ADCSRA, ADCSRA_ADATE);
+    // SET INTERUPT ENABLE PIN (not essentiAL IN ADATE)
+    SET_BIT(ADCSRA, ADCSRA_ADIE);
+
+    /**
+     * Set trigger mode at SFIOR Register
+     */
+    SFIOR &= SFIOR_MASK;
+    SFIOR |= AUTO_TRIG_MODE;
+#endif
+}
+
+u16 ADC_u16GetChannelReading(u8 copy_u8Channel)
+{
+	  u16 result = 0;
+    /* Clear the mux bits in ADMUX register */
+    ADMUX &= ADMUX_MASK_CLEAR;
+    /* Set the channel into mux bits */
+    ADMUX |= copy_u8Channel;
+
+    // Polling busy waiting until flag is set
+#if (AUTO_TRIGGR == DISABLE)
+    /* Start conversion */
+    SET_BIT(ADCSRA, ADCSRA_ADSC);
+    while ((GET_BIT(ADCSRA, ADCSRA_ADIF)) == 0);
+    /* Clear the flag */
+    SET_BIT(ADCSRA, ADCSRA_ADIF);
+#endif
+
+
+#if (ADC_RESOLUTION == 256)
+    return ADCH;
+
+#elif (ADC_RESOLUTION == 1024)
+    result = ADC;
+    return result;
+#endif
+
+}
+
+u8 ADC_u8SetCallback(void (*copy_pv)(void))
+{
+    u8 local_return = 0;
+    if (copy_pv == 0)
+    {
+        local_return = 1;
+    }
+    else
+    {
+        PV_ISRFUNC = copy_pv;
+    }
+    return local_return;
+}
+
+void __vector_16(void) __attribute__((signal));
+void __vector_16(void)
+{
+    if (PV_ISRFUNC != 0)
+    {
+        PV_ISRFUNC();
+    }
+}

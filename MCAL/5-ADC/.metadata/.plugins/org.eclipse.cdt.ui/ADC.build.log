@@ -1,0 +1,45 @@
+02:44:11 **** Incremental Build of configuration Debug for project ADC ****
+make all 
+Building file: ../adc.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"adc.d" -MT"adc.o" -c -o "adc.o" "../adc.c"
+In file included from ../adc.c:13:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../adc.c:24: warning: return type of 'main' is not 'int'
+Finished building: ../adc.c
+ 
+Building target: ADC.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,ADC.map -mmcu=atmega16 -o "ADC.elf"  ./ADC_program.o ./CLCD_program.o ./DIO_program.o ./GIE_program.o ./PORT_program.o ./adc.o   
+Finished building target: ADC.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S ADC.elf  >"ADC.lss"
+Finished building: ADC.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex ADC.elf  "ADC.hex"
+Finished building: ADC.hex
+ 
+Create eeprom image (ihex format)
+avr-objcopy -j .eeprom --no-change-warnings --change-section-lma .eeprom=0 -O ihex ADC.elf  "ADC.eep"
+Finished building: ADC.eep
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 ADC.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    7638 bytes (46.6% Full)
+(.text + .data + .bootloader)
+
+Data:         29 bytes (2.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+02:44:13 Build Finished. 0 errors, 2 warnings. (took 2s.121ms)
+

@@ -1,0 +1,85 @@
+/*******************************************************   ******************/
+/*****************************************************   ******************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : MCAL             *********************/
+/********************** SWC        : ADC              *********************/
+/********************** version    : 1.00             *********************/
+/****************************************************   *******************/
+/*****************************************************   ******************/
+#include"STD_TYPEs.h"
+#include"BIT_MATH.h"
+#include"ADC_interface.h"
+#include"ADC_private.h"
+#include"ADC_config.h"
+#include"ADC_register.h"
+
+	
+void ADC_voidINIT(void)
+{
+    /**
+     * set voltage reference
+     */
+#if(VOLT_Refrence == AVCC)
+	SET_BIT(ADMUX,ADMUX_REFS0);
+	CLR_BIT(ADMUX,ADMUX_REFS1);
+#elif(VOLT_Refrence == AREF)
+	CLR_BIT(ADMUX,ADMUX_REFS1);
+	CLR_BIT(ADMUX,ADMUX_REFS0);
+#elif(VOLT_Refrence == Internal)
+	SET_BIT(ADMUX,ADMUX_REFS0);
+	SET_BIT(ADMUX,ADMUX_REFS1);
+#else
+#error "Wrong Voltage Reference Configurations"
+#endif
+/*************************/
+#if (ADC_RESOLUTION == 256)
+	/*left adjust => 8bits*/
+	SET_BIT(ADMUX,ADMUX_ADLAR);
+#elif(ADC_RESOLUTION == 1024)
+	CLR_BIT(ADMUX,ADMUX_ADLAR);
+#else
+#error "Wrong Resolution Adjustment"
+#endif
+/*************************/
+
+/**
+* SET prescalar options :
+*/
+ ADCSRA &= PRESCALAR_MASK;
+ ADCSRA |= ADC_PRESCALAR;
+  /**
+   * Enable ADC
+   * */
+  SET_BIT(ADCSRA,ADCSRA_ADEN);
+  /*************************/
+#if(AUTO_TRIGGR == ENABLE)
+  ADMUX & = ADMUX_MASK_CLEAR;
+  ADMUX | = AUTO_TRIG_CHANNEL
+
+
+
+#endif
+}
+
+
+u8 ADC_u8GetChannelReading(u8 copy_u8Channel)
+{
+/*clear the mux bits in admux register   */
+	ADMUX &= 0b11100000;
+	/*setting the channel  into mux bits */
+	ADMUX |=copy_u8Channel;
+
+	/* start conversion */
+	SET_BIT(ADCSRA,ADCSRA_ADSC);
+	/* polling busy waiting until flag set */
+	while(GET_BIT(ADCSRA,ADCSRA_ADIF) == 0);
+	/*    CLear the flag                  */
+	SET_BIT(ADCSRA,ADCSRA_ADIF);
+
+	/*return the reading */
+	return ADCH;
+
+}
+
+
+

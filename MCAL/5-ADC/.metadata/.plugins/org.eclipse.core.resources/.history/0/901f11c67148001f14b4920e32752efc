@@ -1,0 +1,56 @@
+/*
+ * adc.c
+ *
+ *  Created on: Jul 20, 2024
+ *      Author: abdel
+ */
+#include "STD_TYPEs.h"
+#include "ADC_interface.h"
+#include "DIO_interface.h"
+#include "PORT_interface.h"
+#include "CLCD_interface.h"
+
+#include"util/delay.h"
+#define ADC_MAX_VALUE 256ul
+#define VREF 5000ul // in millivolts
+
+void main(void)
+{
+    u16 digital_lm35;
+    u16 digital_ldr;
+    u16 millivolt;
+    u8 temp;
+
+    PORT_voidInit();
+    CLCD_voidInitialize();
+    ADC_voidINIT();
+    while(1)
+    {
+    	digital_ldr = ADC_u16GetChannelReading(1);
+    	digital_lm35 = ADC_u16GetChannelReading(0);  // Assuming channel 0
+        millivolt = ((u32)digital_lm35 * VREF) / ADC_MAX_VALUE;
+        temp = millivolt / 10;  // Assuming 10mV per degree
+        CLCD_voidGotoX_Y(0,0);
+        CLCD_voidSendString("temp = ");
+        CLCD_voidWriteNumber(temp);
+        _delay_ms(500);
+        CLCD_voidGotoX_Y(1,0);
+        CLCD_voidSendString("LDR  = ");
+        CLCD_voidWriteNumber(digital_ldr);
+        if(temp > 50 && digital_ldr > 32)
+        {
+        	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN2,DIO_u8PIN_HIGH);
+        	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN3,DIO_u8PIN_HIGH);
+        	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN4,DIO_u8PIN_HIGH);
+        	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN6,DIO_u8PIN_HIGH);
+        }
+        else
+        {
+        	       DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN2,DIO_u8PIN_LOW);
+                	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN3,DIO_u8PIN_LOW);
+                	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN4,DIO_u8PIN_LOW);
+                	DIO_u8SetPinValue(DIO_u8PORTA,DIO_u8PIN6,DIO_u8PIN_LOW);
+        }
+
+    }
+}

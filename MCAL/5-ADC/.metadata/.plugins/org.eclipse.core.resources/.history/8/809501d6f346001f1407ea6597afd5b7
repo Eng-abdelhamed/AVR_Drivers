@@ -2,30 +2,25 @@
 /*****************************************************   ******************/
 /********************** author     : Abdelhamed Ahmed *********************/
 /********************** Layer      : MCAL             *********************/
-/********************** SWC        : LCD              *********************/
+/********************** SWC        : ADC              *********************/
 /********************** version    : 1.00             *********************/
 /****************************************************   *******************/
 /*****************************************************   ******************/
+#ifndef ADC_PRIVATE_H
+#define ADC_PRIVATE_H
 
-#include "STD_TYPEs.h"
-#include"PORT_config.h"
-#include"PORT_private.h"
-#include "PORT_interface.h"
-#include"PORT_register.h"
-
-
-
-void PORT_voidInit(void)
-{
-	DDRA = PORTA_DIR;
-	DDRB = PORTB_DIR;
-	DDRC = PORTC_DIR;
-	DDRD = PORTD_DIR;
+#define DIV_BY_2   0
+#define DIV_BY_4   1
+#define DIV_BY_8   3
+#define DIV_BY_16  4
+#define DIV_BY_32  5
+#define DIV_BY_64  6
+#define DIV_BY_128 7
 
 
-	PORTA = PORTA_INIT_VALUE;
-	PORTA = PORTB_INIT_VALUE;
-	PORTA = PORTC_INIT_VALUE;
-	PORTA = PORTD_INIT_VALUE;
+#define PRESCALAR_MASK 0b11111000
 
-}
+
+
+
+#endif
