@@ -1,0 +1,30 @@
+
+/*********************************************   **************************/
+/******************************************      **************************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : HAL             *********************/
+/********************** SWC        : stepperMotor                    *********************/
+/********************** version    : 1.00             *********************/
+/**********************************************   *************************/
+/*********************************************   **************************/
+
+#include "STD_TYPEs.h"
+#include "DIO_interface.h"
+#include "PORT_interface.h"
+#include "STEPPERMOTOR_config.h"
+#include "STEPPERMOTOR_private.h"
+#include "STEPPERMOTOR_interface.h"
+
+
+void Stepper_voidInit()
+{
+	DIO_u8SetPinValue()
+
+}
+void Stepper_voidStepperControl(u8 angle)
+{
+
+
+
+}
+

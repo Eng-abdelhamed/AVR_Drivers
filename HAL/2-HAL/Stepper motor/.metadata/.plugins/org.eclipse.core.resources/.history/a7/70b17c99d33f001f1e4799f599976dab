@@ -1,0 +1,39 @@
+
+/*********************************************   **************************/
+/******************************************      **************************/
+/********************** author     : Abdelhamed Ahmed *********************/
+/********************** Layer      : HAL             *********************/
+/********************** SWC        : stepperMotor                    *********************/
+/********************** version    : 1.00             *********************/
+/**********************************************   *************************/
+/*********************************************   **************************/
+
+#include "STD_TYPEs.h"
+#include "DIO_interface.h"
+#include "PORT_interface.h"
+#include "STEPPERMOTOR_config.h"
+#include "STEPPERMOTOR_private.h"
+#include "STEPPERMOTOR_interface.h"
+
+
+void Stepper_voidInit()
+{
+	/* we select 4 pin as output to control the ULN 2003 */
+	DIO_u8SetPinValue(stepper_port,stepper_pin1,DIO_u8PIN_HIGH);
+	DIO_u8SetPinValue(stepper_port,stepper_pin2,DIO_u8PIN_HIGH);
+	DIO_u8SetPinValue(stepper_port,stepper_pin3,DIO_u8PIN_HIGH);
+	DIO_u8SetPinValue(stepper_port,stepper_pin4,DIO_u8PIN_HIGH);
+}
+
+void Stepper_voidStepperControl(u8 angle)
+{
+	U8 NoOf_step;
+    U8 NoOf_Iteration;
+
+
+
+
+
+
+}
+
